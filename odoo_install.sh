@@ -79,9 +79,6 @@ sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
 echo -e "\n--- Installing Python 3 + pip3 --"
 sudo apt-get install git python3 python3-pip build-essential wget python3-dev python3-venv python3-wheel libxslt-dev libzip-dev libldap2-dev libsasl2-dev python3-setuptools node-less libpng12-0 libjpeg-dev gdebi -y
 
-echo -e "\n---- Install python packages/requirements ----"
-sudo -H pip3 install -r https://github.com/odoo/odoo/raw/${OE_VERSION}/requirements.txt
-
 echo -e "\n---- Installing nodeJS NPM and rtlcss for LTR support ----"
 sudo apt-get install nodejs npm -y
 sudo npm install -g rtlcss
@@ -119,6 +116,17 @@ sudo chown $OE_USER:$OE_USER /var/log/$OE_USER
 #--------------------------------------------------
 echo -e "\n==== Installing ODOO Server ===="
 sudo git clone --depth 1 --branch $OE_VERSION https://www.github.com/odoo/odoo $OE_HOME_EXT/
+
+# Find RAM size of the instance and remove lxml from requirements if RAM size is less than ~2GB
+RAM_SIZE=$(free --mega | grep Mem: | awk '{print $2;}')
+echo -e "\n---- Install python packages/requirements ----"
+if [ $RAM_SIZE -gt 2000 ]; then
+  sudo -H pip3 install -r $OE_HOME_EXT/requirements.txt
+else
+  sudo sed '/lxml/d' -i $OE_HOME_EXT/requirements.txt
+  sudo -H pip3 install -r $OE_HOME_EXT/requirements.txt
+  sudo apt-get install python3-lxml
+fi
 
 if [ $IS_ENTERPRISE = "True" ]; then
     # Odoo Enterprise install!
