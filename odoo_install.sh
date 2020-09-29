@@ -49,8 +49,10 @@ ADMIN_EMAIL="odoo@example.com"
 ## https://github.com/odoo/odoo/wiki/Wkhtmltopdf ):
 ## https://www.odoo.com/documentation/13.0/setup/install.html#debian-ubuntu
 
-WKHTMLTOX_X64=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.trusty_amd64.deb
-WKHTMLTOX_X32=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.trusty_i386.deb
+# Find Ubuntu Distribution to download correct wkhtmltox package
+LSB_RELEASE=$(lsb_release -c | awk '{print $2;}')
+WKHTMLTOX_X64="https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.${LSB_RELEASE}_amd64.deb"
+WKHTMLTOX_X32="https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.${LSB_RELEASE}_i386.deb"
 #--------------------------------------------------
 # Update Server
 #--------------------------------------------------
@@ -89,7 +91,7 @@ sudo npm install -g rtlcss
 #--------------------------------------------------
 if [ $INSTALL_WKHTMLTOPDF = "True" ]; then
   echo -e "\n---- Install wkhtml and place shortcuts on correct place for ODOO 13 ----"
-  #pick up correct one from x64 & x32 versions:
+  # pick up correct one from x64 & x32 versions:
   if [ "`getconf LONG_BIT`" == "64" ];then
       _url=$WKHTMLTOX_X64
   else
@@ -105,7 +107,7 @@ fi
 
 echo -e "\n---- Create ODOO system user ----"
 sudo adduser --system --quiet --shell=/bin/bash --home=$OE_HOME --gecos 'ODOO' --group $OE_USER
-#The user should also be added to the sudo'ers group.
+# The user should also be added to the sudo'ers group.
 sudo adduser $OE_USER sudo
 
 echo -e "\n---- Create Log directory ----"
