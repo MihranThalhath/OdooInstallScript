@@ -1,7 +1,7 @@
 #!/bin/bash
 ################################################################################
 # Script for installing Odoo on Ubuntu 20.04 (could be used for other version too)
-# Author: Yenthe Van Ginneken
+# Author: Yenthe Van Ginneken, Mihran Thalhath
 #-------------------------------------------------------------------------------
 # This script will install Odoo on your Ubuntu 20.04 server. It can install multiple Odoo instances
 # in one Ubuntu because of the different xmlrpc_ports
