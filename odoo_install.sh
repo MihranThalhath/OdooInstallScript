@@ -22,9 +22,9 @@ OE_HOME_EXT="/opt/$OE_USER/${OE_USER}-server"
 INSTALL_WKHTMLTOPDF="True"
 # Set the default Odoo port (you still have to use -c /etc/odoo-server.conf for example to use this.)
 OE_PORT="8069"
-# Choose the Odoo version which you want to install. For example: 14.0, 13.0, 12.0, 11.0 or saas-18. When using 'master' the master version will be installed.
-# IMPORTANT! This script contains extra libraries that are specifically needed for Odoo 14.0
-OE_VERSION="14.0"
+# Choose the Odoo version which you want to install. For example: 15.0, 14.0, 13.0, 12.0, 11.0 or saas-18. When using 'master' the master version will be installed.
+# IMPORTANT! This script contains extra libraries that are specifically needed for Odoo 15.0
+OE_VERSION="15.0"
 # Set this to True if you want to install the Odoo enterprise version!
 IS_ENTERPRISE="False"
 # Set this to True if you want to install Nginx!
@@ -47,7 +47,7 @@ ADMIN_EMAIL="odoo@example.com"
 ## === Ubuntu Trusty x64 & x32 === (for other distributions please replace these two links,
 ## in order to have correct version of wkhtmltopdf installed, for a danger note refer to
 ## https://github.com/odoo/odoo/wiki/Wkhtmltopdf ):
-## https://www.odoo.com/documentation/14.0/setup/install.html#debian-ubuntu
+## https://www.odoo.com/documentation/15.0/setup/install.html#debian-ubuntu
 
 # Find Ubuntu Distribution to download correct wkhtmltox package
 LSB_RELEASE=$(lsb_release -c | awk '{print $2;}')
@@ -91,7 +91,7 @@ sudo npm install -g rtlcss
 # Install Wkhtmltopdf if needed
 #--------------------------------------------------
 if [ $INSTALL_WKHTMLTOPDF = "True" ]; then
-  echo -e "\n---- Install wkhtml and place shortcuts on correct place for ODOO 14 ----"
+  echo -e "\n---- Install wkhtml and place shortcuts on correct place for ODOO 15 ----"
   # pick up correct one from x64 & x32 versions:
   if [ "`getconf LONG_BIT`" == "64" ];then
       _url=$WKHTMLTOX_X64
