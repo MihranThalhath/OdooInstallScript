@@ -16,6 +16,7 @@
 
 OE_USER="odoo"
 OE_HOME="/opt/$OE_USER"
+OE_HOME_VENV="/opt/$OE_USER/${OE_USER}-venv"
 OE_HOME_EXT="/opt/$OE_USER/${OE_USER}-server"
 # The default port where this Odoo instance will run under (provided you use the command -c in the terminal)
 # Set to true if you want to install it, false if you don't need it or have it already installed.
@@ -122,14 +123,22 @@ sudo git clone --depth 1 --branch $OE_VERSION https://www.github.com/odoo/odoo $
 
 # Find RAM size of the instance and remove lxml from requirements if RAM size is less than ~2GB
 RAM_SIZE=$(free --mega | grep Mem: | awk '{print $2;}')
-echo -e "\n---- Install python packages/requirements ----"
 if [ $RAM_SIZE -gt 2000 ]; then
-  sudo -H pip3 install -r $OE_HOME_EXT/requirements.txt
+  echo ""
 else
   sudo sed '/lxml/d' -i $OE_HOME_EXT/requirements.txt
-  sudo -H pip3 install -r $OE_HOME_EXT/requirements.txt
   sudo apt install python3-lxml
 fi
+
+echo -e "\n---- Setup python virtual environment ----"
+sudo pip3 install virtualenv
+cd $OE_HOME/
+virtualenv $OE_HOME_VENV
+source "$OE_HOME_VENV/bin/activate"
+
+echo -e "\n---- Install python packages/requirements ----"
+pip3 install -r $OE_HOME_EXT/requirements.txt
+pip3 install psycopg2-binary pdfminer.six num2words ofxparse dbfread ebaysdk firebase_admin pyOpenSSL
 
 if [ $IS_ENTERPRISE = "True" ]; then
     # Odoo Enterprise install!
@@ -151,7 +160,7 @@ if [ $IS_ENTERPRISE = "True" ]; then
 
     echo -e "\n---- Added Enterprise code under $OE_HOME/enterprise/addons ----"
     echo -e "\n---- Installing Enterprise specific libraries ----"
-    sudo -H pip3 install psycopg2-binary pdfminer.six num2words ofxparse dbfread ebaysdk firebase_admin pyOpenSSL
+
     sudo npm install -g less
     sudo npm install -g less-plugin-clean-css
 fi
@@ -191,7 +200,8 @@ sudo chmod 640 /etc/${OE_CONFIG}.conf
 
 echo -e "* Create startup file"
 sudo su root -c "echo '#!/bin/sh' >> $OE_HOME_EXT/start.sh"
-sudo su root -c "echo 'sudo -u $OE_USER $OE_HOME_EXT/odoo-bin --config=/etc/${OE_CONFIG}.conf' >> $OE_HOME_EXT/start.sh"
+sudo su root -c "echo '$OE_HOME_VENV/bin/python3 $OE_HOME_EXT/odoo-bin --config=/etc/${OE_CONFIG}.conf' >> $OE_HOME_EXT/start.sh"
+sudo chown $OE_USER:$OE_USER $OE_HOME_EXT/start.sh
 sudo chmod 755 $OE_HOME_EXT/start.sh
 
 #--------------------------------------------------
@@ -213,19 +223,15 @@ cat <<EOF > ~/$OE_CONFIG
 # Description: ODOO Business Applications
 ### END INIT INFO
 PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/bin
-DAEMON=$OE_HOME_EXT/odoo-bin
+CMD=$OE_HOME_EXT/start.sh
 NAME=$OE_CONFIG
 DESC=$OE_CONFIG
 # Specify the user name (Default: odoo).
 USER=$OE_USER
-# Specify an alternate config file (Default: /etc/openerp-server.conf).
-CONFIGFILE="/etc/${OE_CONFIG}.conf"
 # pidfile
 PIDFILE=/var/run/\${NAME}.pid
 # Additional options that are passed to the Daemon.
-DAEMON_OPTS="-c \$CONFIGFILE"
-[ -x \$DAEMON ] || exit 0
-[ -f \$CONFIGFILE ] || exit 0
+OPTS=
 checkpid() {
 [ -f \$PIDFILE ] || return 1
 pid=\`cat \$PIDFILE\`
@@ -236,24 +242,24 @@ case "\${1}" in
 start)
 echo -n "Starting \${DESC}: "
 start-stop-daemon --start --quiet --pidfile \$PIDFILE \
---chuid \$USER --background --make-pidfile \
---exec \$DAEMON -- \$DAEMON_OPTS
+--user \$USER --chuid \$USER --background --make-pidfile \
+--startas \$CMD -- \$OPTS
 echo "\${NAME}."
 ;;
 stop)
 echo -n "Stopping \${DESC}: "
-start-stop-daemon --stop --quiet --pidfile \$PIDFILE \
---oknodo
+start-stop-daemon --stop --user \$USER
 echo "\${NAME}."
 ;;
 restart|force-reload)
 echo -n "Restarting \${DESC}: "
-start-stop-daemon --stop --quiet --pidfile \$PIDFILE \
---oknodo
+start-stop-daemon --stop --user \$USER
+sleep 1
+start-stop-daemon --stop --user \$USER
 sleep 1
 start-stop-daemon --start --quiet --pidfile \$PIDFILE \
---chuid \$USER --background --make-pidfile \
---exec \$DAEMON -- \$DAEMON_OPTS
+--user \$USER --chuid \$USER --background --make-pidfile \
+--startas \$CMD -- \$OPTS
 echo "\${NAME}."
 ;;
 *)
