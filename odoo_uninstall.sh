@@ -17,10 +17,13 @@ then
 fi
 OE_USER="_"
 if [ $OE_USER != "_" ]; then
+    sudo su - postgres -c "dropuser $OE_USER"
+	sudo userdel -f $OE_USER
+	sudo groupdel -f $OE_USER
 	rm -rf "/opt/$OE_USER"
 	rm "/etc/init.d/$OE_USER-server"
 	rm "/etc/$OE_USER-server.conf"
-	rm "/var/log/$OE_USER/$OE_USER-server.log"
+	rm -rf "/var/log/$OE_USER"
 	echo "Successfully removed Odoo files"
 else
 	echo "Please configure the OE_USER variable in the script"
