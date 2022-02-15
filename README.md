@@ -37,3 +37,7 @@ chmod +x odoo_install.sh
 ```
 sudo ./odoo_install.sh
 ```
+
+## Notes
+This script sets up Odoo using a virtual python environment. Keep this in mind while you are installing any
+additional python packages. By default the python virtual environment is available in Odoo user's home folder.
