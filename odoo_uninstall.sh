@@ -12,19 +12,19 @@
 # Set the same OE_USER value used while installing Odoo
 if [ "$EUID" -ne 0 ]
 then
-	echo "Please fun this script as superuser. Aborting"
-	exit 1
+    echo "Please fun this script as superuser. Aborting"
+    exit 1
 fi
 OE_USER="_"
 if [ $OE_USER != "_" ]; then
     sudo su - postgres -c "dropuser $OE_USER"
-	sudo userdel -f $OE_USER
-	sudo groupdel -f $OE_USER
-	rm -rf "/opt/$OE_USER"
-	rm "/etc/init.d/$OE_USER-server"
-	rm "/etc/$OE_USER-server.conf"
-	rm -rf "/var/log/$OE_USER"
-	echo "Successfully removed Odoo files"
+    sudo userdel -f $OE_USER
+    sudo groupdel -f $OE_USER
+    rm -rf "/opt/$OE_USER"
+    rm "/etc/init.d/$OE_USER-server"
+    rm "/etc/$OE_USER-server.conf"
+    rm -rf "/var/log/$OE_USER"
+    echo "Successfully removed Odoo files"
 else
-	echo "Please configure the OE_USER variable in the script"
+    echo "Please configure the OE_USER variable in the script"
 fi
