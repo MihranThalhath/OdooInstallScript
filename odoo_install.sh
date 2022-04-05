@@ -18,7 +18,6 @@ OE_USER="odoo"
 OE_HOME="/opt/$OE_USER"
 OE_HOME_VENV="/opt/$OE_USER/${OE_USER}-venv"
 OE_HOME_EXT="/opt/$OE_USER/${OE_USER}-server"
-# The default port where this Odoo instance will run under (provided you use the command -c in the terminal)
 # Set to true if you want to install it, false if you don't need it or have it already installed.
 INSTALL_WKHTMLTOPDF="True"
 # Set the default Odoo port (you still have to use -c /etc/odoo-server.conf for example to use this.)
@@ -86,6 +85,8 @@ sudo apt install libpng12-0 -y
 echo -e "\n---- Installing nodeJS NPM and rtlcss for LTR support ----"
 sudo apt install nodejs npm -y
 sudo npm install -g rtlcss
+sudo npm install -g less
+sudo npm install -g less-plugin-clean-css
 
 #--------------------------------------------------
 # Install Wkhtmltopdf if needed
@@ -161,8 +162,6 @@ if [ $IS_ENTERPRISE = "True" ]; then
     echo -e "\n---- Added Enterprise code under $OE_HOME/enterprise/addons ----"
     echo -e "\n---- Installing Enterprise specific libraries ----"
 
-    sudo npm install -g less
-    sudo npm install -g less-plugin-clean-css
 fi
 
 echo -e "\n---- Create custom module directory ----"
