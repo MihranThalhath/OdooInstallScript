@@ -13,6 +13,7 @@ If you set the parameter ```INSTALL_NGINX``` to ```True``` you should also confi
 ```
 wget https://raw.githubusercontent.com/MihranThalhath/InstallScript/15.0/odoo_install.sh
 ```
+Use ```odoo_install_legacy.sh``` if you don't need to run Odoo using python virtual environment
 ##### 2. Modify the parameters as you wish.
 There are a few things you can configure, this is the most used list:<br/>
 ```OE_USER``` will be the username for the system user.<br/>
@@ -39,5 +40,5 @@ sudo ./odoo_install.sh
 ```
 
 ## Notes
-This script sets up Odoo using a virtual python environment. Keep this in mind while you are installing any
+The ```odoo_install.sh``` script sets up Odoo using a virtual python environment. Keep this in mind while you are installing any
 additional python packages. By default the python virtual environment is available in Odoo user's home folder.

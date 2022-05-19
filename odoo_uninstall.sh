@@ -12,7 +12,7 @@
 # Set the same OE_USER value used while installing Odoo
 if [ "$EUID" -ne 0 ]
 then
-    echo "Please fun this script as superuser. Aborting"
+    echo "Please run this script as superuser. Aborting"
     exit 1
 fi
 OE_USER="_"
