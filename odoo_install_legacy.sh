@@ -59,7 +59,7 @@ echo -e "\n---- Update Server ----"
 sudo apt install software-properties-common -y
 sudo add-apt-repository universe
 # libpng12-0 dependency for wkhtmltopdf
-sudo add-apt-repository ppa:linuxuprising/libpng12
+sudo add-apt-repository ppa:linuxuprising/libpng12 -y
 
 sudo add-apt-repository "deb http://mirrors.kernel.org/ubuntu/ xenial main"
 sudo apt update
