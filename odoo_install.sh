@@ -385,6 +385,8 @@ fi
 echo -e "* Starting Odoo Service"
 sudo su root -c "/etc/init.d/$OE_CONFIG start"
 echo "-----------------------------------------------------------"
+echo "Odoo is running using Python Virtual Environment!"
+echo "-----------------------------------------------------------"
 echo "Done! The Odoo server is up and running. Specifications:"
 echo "Port: $OE_PORT"
 echo "User service: $OE_USER"
