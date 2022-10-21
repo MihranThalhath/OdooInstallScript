@@ -59,8 +59,6 @@ echo -e "\n---- Update Server ----"
 # universe package is for Ubuntu 20.x
 sudo apt install software-properties-common -y
 sudo add-apt-repository universe
-# libpng12-0 dependency for wkhtmltopdf
-sudo add-apt-repository ppa:linuxuprising/libpng12 -y
 
 sudo add-apt-repository "deb http://mirrors.kernel.org/ubuntu/ xenial main"
 sudo apt update
@@ -79,8 +77,7 @@ sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
 # Install Dependencies
 #--------------------------------------------------
 echo -e "\n--- Installing Python 3 + pip3 --"
-sudo apt install git python3 python3-pip python3-cffi build-essential wget python3-dev python3-venv python3-wheel libxslt-dev libzip-dev libldap2-dev libsasl2-dev python3-setuptools node-less libjpeg-dev gdebi xfonts-base xfonts-75dpi -y
-sudo apt install libpng12-0 -y
+sudo apt install git python3 python3-pip python3-cffi build-essential wget python3-dev python3-venv python3-wheel libxslt-dev libzip-dev libldap2-dev libsasl2-dev python3-setuptools node-less libpng-dev libjpeg-dev gdebi xfonts-base xfonts-75dpi -y
 
 echo -e "\n---- Installing nodeJS NPM and rtlcss for LTR support ----"
 sudo apt install nodejs npm -y
